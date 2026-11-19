@@ -1,0 +1,41 @@
+name: Qualidade e testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Python ${{ matrix.python }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Instalar dependências de desenvolvimento
+        run: python -m pip install -e ".[dev]"
+      - name: Conferir código
+        run: python -m ruff check .
+      - name: Conferir formatação
+        run: python -m ruff format --check .
+      - name: Executar testes sem API real
+        run: python -m unittest discover -s tests -v
+      - name: Gerar pacote
+        run: python -m build
