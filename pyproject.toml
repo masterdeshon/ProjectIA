@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "projectia"
+version = "0.1.0"
+description = "Assistente de IA para desktop com Python, Tkinter e a API da OpenAI."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "masterdeshon" }]
+dependencies = [
+    "openai>=2.0,<3.0",
+    "python-dotenv>=1.0,<2.0",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.8,<1.0", "build>=1.2,<2.0", "httpx>=0.27,<1.0"]
+
+[project.scripts]
+projectia = "projectia.gui:main"
+
+[project.urls]
+Repository = "https://github.com/masterdeshon/ProjectIA"
+Issues = "https://github.com/masterdeshon/ProjectIA/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
